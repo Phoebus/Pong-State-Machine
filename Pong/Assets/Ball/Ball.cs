@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private float speed = 5;
+    [SerializeField] private float speed = 10;
 
     private SpriteRenderer spriteRenderer;
     private Camera cam;
@@ -43,8 +43,10 @@ public class Ball : MonoBehaviour
 
     public void ResetPos()
     {
-        float startX = Screen.width / 2;
-        float startY = Screen.height / 2;
+        float startX = cam.pixelRect.x / 2;
+        float startY = cam.pixelRect.y / 2;
+
+        RandomizeStart(this.movementDirection * -1);
 
         this.transform.position = new Vector3(startX, startY, this.transform.position.z);
     }
@@ -65,6 +67,23 @@ public class Ball : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void RandomizeStart(int movementDirection)
+    {
+        angle = Random.Range(0.1f, 2f);
+
+        float rand = Random.Range(0f, 1f);
+        if (rand < 0.5)
+        {
+            mirrorDirection = -1;
+        }
+        else
+        {
+            mirrorDirection = 1;
+        }
+
+        this.movementDirection = movementDirection; 
     }
 
     private void RandomizeStart()
