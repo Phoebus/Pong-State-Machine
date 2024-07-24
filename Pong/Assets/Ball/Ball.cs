@@ -11,28 +11,45 @@ public class Ball : MonoBehaviour
     private int mirrorDirection;
     private int movementDirection;
 
+    public int getMovementDirection() { return movementDirection; }
+
     void Start()
     {
         cam = FindObjectOfType<Camera>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        randomizeStart();
-        Debug.Log(angle);
+        RandomizeStart();
     }
 
     void Update()
     {
         Vector2 movement = new Vector2(speed * movementDirection, (speed * movementDirection) * angle * mirrorDirection) * Time.deltaTime;
         
-        if(checkForBorderCollision(movement.y))
+        if(CheckForBorderCollision(movement.y))
         {
             angle *= -1;
-            Debug.Log("new angle=" + angle);
         }
 
         transform.position += new Vector3(movement.x, movement.y, 0);
     }
-    private bool checkForBorderCollision(float movement)
+
+    public void OnPaddleCollision()
+    {
+
+        angle *= -1;
+        movementDirection *= -1;
+
+    }
+
+    public void ResetPos()
+    {
+        float startX = Screen.width / 2;
+        float startY = Screen.height / 2;
+
+        this.transform.position = new Vector3(startX, startY, this.transform.position.z);
+    }
+
+    private bool CheckForBorderCollision(float movement)
     {
         // Get the height of the sprite and multiply it by the scale on the Y axis.
         float ballHeight = spriteRenderer.sprite.bounds.size.y * transform.lossyScale.y;
@@ -50,7 +67,7 @@ public class Ball : MonoBehaviour
         return true;
     }
 
-    private void randomizeStart()
+    private void RandomizeStart()
     {
 
         angle = Random.Range(0.1f, 2f);

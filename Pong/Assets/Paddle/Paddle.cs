@@ -42,4 +42,14 @@ public class PaddleScript : MonoBehaviour
 
         return true;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if(collision.GetComponent<Ball>() != null)
+        {
+            collision.GetComponent<Ball>().OnPaddleCollision();
+        }
+
+    }
 }
