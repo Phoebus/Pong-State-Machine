@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
+    [SerializeField] private float startingSpeed = 10;
+    private float speed;
 
     private SpriteRenderer spriteRenderer;
     private Camera cam;
@@ -12,6 +13,11 @@ public class Ball : MonoBehaviour
     private int movementDirection;
 
     public int getMovementDirection() { return movementDirection; }
+
+    private void Awake()
+    {
+        speed = startingSpeed;
+    }
 
     void Start()
     {
@@ -23,7 +29,7 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
-        Vector2 movement = new Vector2(speed * movementDirection, (speed * movementDirection) * angle * mirrorDirection) * Time.deltaTime;
+        Vector2 movement = new Vector2(movementDirection, movementDirection * angle * mirrorDirection).normalized * speed * Time.deltaTime;
         
         if(CheckForBorderCollision(movement.y))
         {
@@ -33,15 +39,7 @@ public class Ball : MonoBehaviour
         transform.position += new Vector3(movement.x, movement.y, 0);
     }
 
-    public void OnPaddleCollision()
-    {
-
-        angle *= -1;
-        movementDirection *= -1;
-
-    }
-
-    public void ResetPos()
+    public void Reset()
     {
         float startX = cam.pixelRect.x / 2;
         float startY = cam.pixelRect.y / 2;
@@ -49,6 +47,7 @@ public class Ball : MonoBehaviour
         RandomizeStart(this.movementDirection * -1);
 
         this.transform.position = new Vector3(startX, startY, this.transform.position.z);
+        speed = startingSpeed;
     }
 
     private bool CheckForBorderCollision(float movement)
@@ -109,5 +108,15 @@ public class Ball : MonoBehaviour
         {
             movementDirection = 1;
         }
+    }
+    public void OnPaddleCollision()
+    {
+
+        angle *= -1;
+        angle = Random.Range(0.4f, angle);
+        Debug.Log(angle);
+        movementDirection *= -1;
+        speed += speed * 0.1f;
+
     }
 }
