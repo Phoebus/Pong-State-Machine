@@ -11,14 +11,12 @@ public class Goal : MonoBehaviour
             Ball ballScript = collision.GetComponent<Ball>();
             if(ballScript.getMovementDirection() == -1)
             {
-                Debug.Log("Right Player scores!!!");
                 GameManager.instance.RightScores();
             } else if (ballScript.getMovementDirection() == 1)
             {
-                Debug.Log("Left player scores!!!");
                 GameManager.instance.LeftScores();
             }
-            ballScript.ResetPos();
+            ballScript.Reset();
         }
 
     }
