@@ -114,7 +114,6 @@ public class Ball : MonoBehaviour
 
         angle *= -1;
         angle = Random.Range(0.4f, angle);
-        Debug.Log(angle);
         movementDirection *= -1;
         speed += speed * 0.1f;
 

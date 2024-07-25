@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public int leftScore { get; private set; }
     public int rightScore { get; private set; }
 
@@ -15,11 +14,12 @@ public class GameManager : MonoBehaviour
     // Else set instance to me.
     private void Awake()
     {
-        
-        if(instance != null && instance != this)
+
+        if (instance != null && instance != this)
         {
             Destroy(this.gameObject);
-        } else
+        }
+        else
         {
             instance = this;
         }
@@ -28,6 +28,24 @@ public class GameManager : MonoBehaviour
         rightScore = 0;
     }
 
-    public void RightScores() { rightScore++; Debug.Log("The score is " + leftScore + " : " + rightScore); }
-    public void LeftScores() { leftScore++; Debug.Log("The score is " + leftScore + " : " + rightScore); }
+    public void RightScores() 
+    { 
+        rightScore++;
+        ScoreSript.ChangeScore(leftScore, rightScore);
+    }
+    public void LeftScores() 
+    { 
+        leftScore++;
+        ScoreSript.ChangeScore(leftScore, rightScore);
+    }
+
+    public void ChangeScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void QuitApp()
+    {
+        Application.Quit();
+    }
 }
