@@ -1,46 +1,39 @@
 using UnityEngine;
 
-public class PaddleScript : MonoBehaviour
+public class Paddle : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
+    public MovingState movingState;
+    public IdleState idleState;
 
-    private SpriteRenderer spriteRenderer;
-    private Camera cam = null;
+    private State currState;
 
-    void Start()
+    public float input { get; private set; }
+
+    private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        cam = FindObjectOfType<Camera>();
-
+        currState = idleState;
+        currState.Enter();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        
-        float movement = Input.GetAxisRaw("Vertical") * speed * Time.deltaTime;
-        if(!checkForBorderCollision(movement))
+        input = Input.GetAxisRaw("Vertical");
+
+        if(currState.isComplete)
         {
-            transform.position += new Vector3(0, movement, 0);
+            if(input != 0)
+            {
+                currState.Exit();
+                currState = movingState;
+                currState.Enter();
+            } else
+            {
+                currState.Exit();
+                currState = idleState;
+                currState.Enter();
+            }
         }
-
-    }
-
-    private bool checkForBorderCollision(float movement)
-    {
-        // Get the height of the sprite and multiply it by the scale on the Y axis.
-        float paddleHeight = spriteRenderer.sprite.bounds.size.y * transform.lossyScale.y;
-
-        float topEdge = transform.position.y + paddleHeight / 2;
-        float bottomEdge = transform.position.y - paddleHeight / 2;
-
-        // Check if topEdge will go over the screen or if bottomEdge will go under the screen.
-        if (cam.WorldToViewportPoint(new Vector3(0, topEdge + movement, 0)).y < 1
-            && cam.WorldToViewportPoint(new Vector3(0, bottomEdge + movement, 0)).y > 0)
-        {
-            return false;
-        }
-
-        return true;
+        currState.PhysicsProcess();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
