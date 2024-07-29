@@ -7,6 +7,8 @@ public class Paddle : MonoBehaviour
 
     private State currState;
 
+    [SerializeField] private bool secondPlayer = false;
+
     public float input { get; private set; }
 
     private void Start()
@@ -17,7 +19,13 @@ public class Paddle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        input = Input.GetAxisRaw("Vertical");
+        if(secondPlayer)
+        {
+            input = Input.GetAxisRaw("Vertical1");
+        } else
+        {
+            input = Input.GetAxisRaw("Vertical2");
+        }
 
         if(currState.isComplete)
         {
