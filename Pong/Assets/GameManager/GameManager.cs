@@ -6,13 +6,19 @@ public class GameManager : MonoBehaviour
     private enum State
     {
         Menu,
-        Game
+        Game,
+        Victory
     }
 
-    private State currState;
+    private static State currState;
 
-    public int leftScore { get; private set; }
-    public int rightScore { get; private set; }
+    public static int leftScore { get; private set; }
+    public static int rightScore { get; private set; }
+
+    [SerializeField] static int winScore = 2;
+
+    public static bool player1wins { get; private set; }
+    public static bool player2wins { get; private set; }
 
     // Singleton design pattern. Static instance of the game manager but it can only be set from this class.
     public static GameManager instance { get; private set; }
@@ -46,19 +52,42 @@ public class GameManager : MonoBehaviour
                     currState = State.Game;
                     break;
                 }
+            case "Victory": 
+                {
+                    currState = State.Victory;
+                    break;
+                }
         }
-        Debug.Log("GameManager is in " + currState.ToString() + " state.");
+        Debug.Log("GameManager is in " + currState.ToString() + " state with Left Score: " + leftScore + " and Right Score: " + rightScore);
     }
 
     private void Update()
     {
+        //Check for win condition.
+        if(leftScore == winScore)
+        {
+            player1wins = true;
+            ChangeScene("Victory");
+        } else if(rightScore == winScore)
+        {
+            player2wins = true;
+            ChangeScene("Victory");
+        }
+
         switch(currState)
         {
             case State.Game:
                 {
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        currState = State.Menu;
+                        ChangeScene("Menu");
+                    }
+                    break;
+                }
+            case State.Victory:
+                {
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
                         ChangeScene("Menu");
                     }
                     break;
@@ -68,7 +97,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayButtonClick()
     {
-        currState = State.Game;
         ChangeScene("Game");
     }
 
@@ -91,5 +119,11 @@ public class GameManager : MonoBehaviour
     public void QuitApp()
     {
         Application.Quit();
+    }
+
+    public void resetScores()
+    {
+        player2wins = false;
+        player1wins = false;
     }
 }
