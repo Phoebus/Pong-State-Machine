@@ -43,3 +43,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: GameThings
+    uniqueID: 1747241029
+    locked: 0

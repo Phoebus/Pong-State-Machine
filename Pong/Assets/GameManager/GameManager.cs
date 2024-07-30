@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public static int leftScore { get; private set; }
     public static int rightScore { get; private set; }
 
-    [SerializeField] static int winScore = 2;
+    [SerializeField] int winScore = 2;
 
     public static bool player1wins { get; private set; }
     public static bool player2wins { get; private set; }
